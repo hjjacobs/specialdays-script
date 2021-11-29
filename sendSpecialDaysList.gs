@@ -4,15 +4,16 @@
 const currentDate                = new Date();
 const currentYear                = currentDate.getFullYear();
 const currentMonth               = currentDate.getMonth();
+const currentMonthString         = Utilities.formatDate(currentDate, "CET", "MMMM")
 const MAIL_RECIPIENT             = "<<MAIL ADDRESS>>";   // Mail address of the recipient for the birthday list
-const MAIL_SUBJECT_BIRTHDAYS     = "Resterende verjaardagen voor " + currentYear;
-const MAIL_SUBJECT_ANNIVERSARIES = "Resterende jubilea voor " + currentYear;
-const MAIL_HEADER_BIRTHDAYS      = "<h3>Verjaardagen tot eind " + currentYear + ":</h3><p>";
-const MAIL_HEADER_ANNIVERSARIES  = "<h3>Jubilea tot eind " + currentYear + ":</h3><p>"
-const MAIL_FOOTER                = "</p><p>\nTot de volgende keer!</p>";
-const MAIL_MONTH_HEADER_BD       = "<h4>Deze maand jarig</br></h4>";
+const MAIL_SUBJECT_BIRTHDAYS     = "Verjaardagen voor " + currentMonthString + " " + currentYear;
+const MAIL_SUBJECT_ANNIVERSARIES = "Jubilea voor " + currentMonthString + " " + currentYear;
+const MAIL_HEADER_BIRTHDAYS      = "<h3>Verjaardagen in " + currentYear + "</h3><p>";
+const MAIL_HEADER_ANNIVERSARIES  = "<h3>Jubilea in " + currentYear + "</h3><p>"
+const MAIL_FOOTER                = "</p><p>\nTot de volgende maand!</p>";
+const MAIL_MONTH_HEADER_BD       = "<h4>In " + currentMonthString + " jarig</br></h4>";
 const MAIL_REST_YEAR_HEADER_BD   = "<h4>Verjaardagen rest van het jaar</br></h4>";
-const MAIL_MONTH_HEADER_AN       = "<h4>Jubilea deze maand</br></h4>";
+const MAIL_MONTH_HEADER_AN       = "<h4>Jubilea in " + currentMonthString + "</br></h4>";
 const MAIL_REST_YEAR_HEADER_AN   = "<h4>Jubilea rest van het jaar</br></h4>";
 
 /*

@@ -22,6 +22,8 @@ const MAIL_REST_YEAR_HEADER_AN   = "<h4>Jubilea rest van het jaar</br></h4>";
  */
 function sendSpecialDaysList() {
 
+  currentDate.setHours(0,0,0,0); // Set time part to zero for comparison purposes
+
   // Filter contacts: a contact must have a full name (eliminate companies)
   // Get list of all contacts - order is determined by the getContacts method
   var contacts = ContactsApp.getContacts().filter(function (e) {

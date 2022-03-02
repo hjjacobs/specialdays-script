@@ -4,7 +4,7 @@
 const currentDate                = new Date();
 const currentYear                = currentDate.getFullYear();
 const currentMonth               = currentDate.getMonth();
-const currentMonthString         = Utilities.formatDate(currentDate, "CET", "MMMM")
+const currentMonthString         = LanguageApp.translate(Utilities.formatDate(currentDate, "CET", "MMMM"), 'en', 'nl');
 const MAIL_RECIPIENT             = "<<MAIL ADDRESS>>";   // Mail address of the recipient for the birthday list
 const MAIL_SUBJECT_BIRTHDAYS     = "Verjaardagen voor " + currentMonthString + " " + currentYear;
 const MAIL_SUBJECT_ANNIVERSARIES = "Jubilea voor " + currentMonthString + " " + currentYear;
@@ -212,7 +212,10 @@ function generateBirthdayList(persons) {
       restOfYearHeaderPrinted = true;
     }
 
-    htmlBody = htmlBody + `Op ${birthdayDate.getDate()}-${(birthdayDate.getMonth() + 1)} wordt ${e.name} <b>${e.age}</b> jaar (${birthdayDate.getFullYear()}).<br/>`;
+    // Get the day of the week in dutch
+    let dayOfWeek = LanguageApp.translate(Utilities.formatDate(thisYearDate, "CET", "EEEE"), 'en', 'nl');
+
+    htmlBody = htmlBody + `Op ${dayOfWeek} ${birthdayDate.getDate()}-${(birthdayDate.getMonth() + 1)} wordt ${e.name} <b>${e.age}</b> jaar (${birthdayDate.getFullYear()}).<br/>`;
   });
 
   // Close mail body
@@ -261,7 +264,10 @@ function generateAnniversaryList(persons) {
       restOfYearHeaderPrinted = true;
     }
 
-    htmlBody = htmlBody + `Op ${anniversaryDate.getDate()}-${(anniversaryDate.getMonth() + 1)} heeft ${e.name} een <b>${e.anniversaryYears}</b>-jarig jubileum (${anniversaryDate.getFullYear()}).<br/>`;
+    // Get the day of the week in dutch
+    let dayOfWeek = LanguageApp.translate(Utilities.formatDate(thisYearDate, "CET", "EEEE"), 'en', 'nl');
+
+    htmlBody = htmlBody + `Op ${dayOfWeek} ${anniversaryDate.getDate()}-${(anniversaryDate.getMonth() + 1)} heeft ${e.name} een <b>${e.anniversaryYears}</b>-jarig jubileum (${anniversaryDate.getFullYear()}).<br/>`;
   });
 
   // Close mail body

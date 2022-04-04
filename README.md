@@ -9,14 +9,14 @@ Using Google Contacts and the Google Apps Script environment mail me a list of a
 ## Steps to setup everything
 
 1. Head to https://script.google.com/home/my and create a new project. Rename the existing file Code.gs to your liking and paste the code from sendSpecialDaysList.gs.
-2. Paste your mail address in line 7
-3. Customize the mail text in lines 8-16
-4. Customize the mail text for each birthday in line 212 
-4. Customize the mail text for each birthday in line 261
+2. Paste your mail address in line 8
+3. Customize the mail text in lines 9-17
+4. Customize the mail text for each birthday in line 218
+4. Customize the mail text for each anniversary in line 270
 5. Hit run and see the mails in your inbox
 6. Create a trigger to run this every month for a monthly reminder
 
-Remove line 34 and 35 when you do not want a mail for the anniversaries.
+Remove line 37 and 38 when you do not want a mail for the anniversaries (and/or remover the code completely).
 
 ## Notes
 

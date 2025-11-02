@@ -25,7 +25,7 @@ Remove line 37 and 38 when you do not want a mail for the anniversaries (and/or 
 
 ## Notes
 
-This my first javascript code, it needs more refactoring. Any tips are welcome.
+The latest version of this script was updated with the help of Claude AI.
 
 <hr>
 

@@ -21,21 +21,43 @@ const MAIL_REST_YEAR_HEADER_AN   = "<h4>Jubilea rest van het jaar</br></h4>";
  * - Also add calculated age of the people
  */
 function sendSpecialDaysList() {
-
   currentDate.setHours(0,0,0,0); // Set time part to zero for comparison purposes
 
-  // Filter contacts: a contact must have a full name (eliminate companies)
-  // Get list of all contacts - order is determined by the getContacts method
-  var contacts = ContactsApp.getContacts().filter(function (e) {
-    return e.getFullName() != "";
-  });
-    
+  let contacts = getAllContacts();
   let persons = convertContactsToPersons(contacts);
+  
   let htmlBody = generateBirthdayList(persons);
   mailList(MAIL_SUBJECT_BIRTHDAYS, htmlBody);
 
   htmlBody = generateAnniversaryList(persons);
   mailList(MAIL_SUBJECT_ANNIVERSARIES, htmlBody);
+}
+
+/*
+ * Get all contacts using People API
+ */
+function getAllContacts() {
+  let contacts = [];
+  let pageToken = null;
+  
+  do {
+    const response = People.People.Connections.list('people/me', {
+      pageSize: 1000,
+      personFields: 'names,birthdays,events',
+      pageToken: pageToken
+    });
+    
+    if (response.connections) {
+      contacts = contacts.concat(response.connections);
+    }
+    
+    pageToken = response.nextPageToken;
+  } while (pageToken);
+  
+  // Filter out contacts without names (companies, etc.)
+  return contacts.filter(contact => {
+    return contact.names && contact.names.length > 0 && contact.names[0].displayName;
+  });
 }
 
 /*
@@ -48,6 +70,7 @@ function mailList(subject, body) {
     htmlBody: body
   });
 }
+
 /*
  * Person class
  * Constructor pattern
@@ -81,41 +104,55 @@ function Person(name) {
 }
 
 /*
- * Convert contacts to a more flattend person structure.
- * The person object contain only data necessary to create the list.
+ * Convert contacts to a more flattened person structure.
+ * The person object contains only data necessary to create the list.
  */
 function convertContactsToPersons(contacts) {
   let persons = [];
 
   for (let contact of contacts) {
-    let birthdays     = contact.getDates(ContactsApp.Field.BIRTHDAY);
-    let anniversaries = contact.getDates(ContactsApp.Field.ANNIVERSARY);
-    var person        = new Person(contact.getFullName());
+    let name = contact.names && contact.names.length > 0 ? contact.names[0].displayName : null;
+    if (!name) continue;
 
-    for (let birthday of birthdays) {
-      let day = birthday.getDay().toFixed();           // day of birth - removing the decimals
-      let year = birthday.getYear().toFixed();         // year of birth - removing the decimals
-      let month = (birthday.getMonth().ordinal()) + 1; // month of birth - convert enum to number (zero based)
+    let person = new Person(name);
+    let hasBirthdayOrAnniversary = false;
 
-      let calculatedAge = Math.round(currentYear - year).toFixed();
-
-      person.setBirthday(year, month, day);
-      person.setAge(calculatedAge);
+    // Process birthdays
+    if (contact.birthdays && contact.birthdays.length > 0) {
+      for (let birthday of contact.birthdays) {
+        if (birthday.date && birthday.date.year && birthday.date.month && birthday.date.day) {
+          let year = birthday.date.year;
+          let month = birthday.date.month;
+          let day = birthday.date.day;
+          
+          let calculatedAge = currentYear - year;
+          
+          person.setBirthday(year, month, day);
+          person.setAge(calculatedAge);
+          hasBirthdayOrAnniversary = true;
+        }
+      }
     }
 
-    for (let anniversary of anniversaries) {
-      let day = anniversary.getDay().toFixed();           // day of birth - removing the decimals
-      let year = anniversary.getYear().toFixed();         // year of birth - removing the decimals
-      let month = (anniversary.getMonth().ordinal()) + 1; // month of birth - convert enum to number (zero based)
-
-      let calculatedYears = Math.round(currentYear - year).toFixed();
-
-      person.setAnniversary(year, month, day);
-      person.setAnniversaryYears(calculatedYears);
+    // Process anniversaries (stored in events with type 'anniversary')
+    if (contact.events && contact.events.length > 0) {
+      for (let event of contact.events) {
+        if (event.type === 'anniversary' && event.date && event.date.year && event.date.month && event.date.day) {
+          let year = event.date.year;
+          let month = event.date.month;
+          let day = event.date.day;
+          
+          let calculatedYears = currentYear - year;
+          
+          person.setAnniversary(year, month, day);
+          person.setAnniversaryYears(calculatedYears);
+          hasBirthdayOrAnniversary = true;
+        }
+      }
     }
 
     // Only add a person to persons with a birthday and/or an anniversary
-    if ((person.birthday != null) || (person.anniversary != null)) {
+    if (hasBirthdayOrAnniversary) {
       persons.push(person);
     }
   }

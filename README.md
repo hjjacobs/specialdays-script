@@ -13,8 +13,13 @@ Using Google Contacts and the Google Apps Script environment mail me a list of a
 3. Customize the mail text in lines 9-17
 4. Customize the mail text for each birthday in line 218
 4. Customize the mail text for each anniversary in line 270
-5. Hit run and see the mails in your inbox
-6. Create a trigger to run this every month for a monthly reminder
+5. Enable the People API
+    - Before running this script, you must enable the People API:
+    - In your Google Apps Script editor, click on "Services" (the + icon)
+    - Find "People API" and add it
+    - Set the identifier to People and version to v1
+6. Hit run and see the mails in your inbox
+7. Create a trigger to run this every month for a monthly reminder
 
 Remove line 37 and 38 when you do not want a mail for the anniversaries (and/or remover the code completely).
 
